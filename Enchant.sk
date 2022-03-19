@@ -34,9 +34,6 @@ on load:
 		broadcast "{@p}All Enchants loaded!"
 		
 on right click on enchanting table:
-	if player is in world "minihub":
-		cancel event
-		make player say "/enchant"
 	if {@normalenchanting} is false:
 		cancel event
 		make player say "/enchant"
