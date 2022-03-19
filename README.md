@@ -1,5 +1,5 @@
 # Enchant-GUI
-The easyer way to enchant items!
+The easier way to enchant items!
 
 Needed
  -Skript
