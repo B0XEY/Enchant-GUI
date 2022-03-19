@@ -1,18 +1,20 @@
 # Enchant-GUI
-Thanos gauntlet in skript
+The easyer way to enchant items!
 
 Needed
  -Skript
  
+ 
 
 Needed
- -Skript (Link: https://github.com/SkriptLang/Skript/releases)
-SKBee (Link: https://github.com/ShaneBeee/SkBee/releases/tag/1.12.4)
-SkQuery (Link: https://github.com/SkQuery/SkQuery/releases/tag/4.1.5)
-How to use
+ - Skript (Link: https://github.com/SkriptLang/Skript/releases)
+ - SKBee (Link: https://github.com/ShaneBeee/SkBee/releases/tag/1.12.4)
+ - SkQuery (Link: https://github.com/SkQuery/SkQuery/releases/tag/4.1.5)
 
-Download the folder
-Put the "ThanosPack.Zip" into the resource pack folder
-Put the "Thanos" folder in your skripts folder
-once the folder is in your skript folder so "/sk reload all"
-then do "/stone all" and click the gaunlet
+
+
+How to use
+ - Download the file
+ - Put the "Enchant.sk" Where you skripts are located
+ - Once the file is uploaded
+ - Run "/sk reload Enchant"
