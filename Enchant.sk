@@ -1,0 +1,294 @@
+options:
+	p: &6Gold &8| &7
+	perm: enchant.sk
+	permmsg: &cHey! &7You can not not this command yet.
+	
+	loadmsg: true #IF IT WILL SEND THE LOAD MESSAGE
+
+
+	usecoins: false  #IF "FALSE" WILL BE FREE
+	money: {coins.%{_p}'s uuid%} #THE MONE YVAR FOR YOUR SERVER (MAKE SURE YOU USE "{_p}" AND NOT "player"
+	encantcost: 500 #SINGLE ENCHANT COST
+	maxenchantcost: 2500 #MAX ENCHANT SOCY
+	
+	closeinv: false #SAYS IF THE PLAYER'S INVENTORY WILL BE CLOSED ON AN UPGRADE
+	normalenchanting: true #SAYS IF PLAYERS CAN USE A TABLE TO ENCHANT STILL AND NOT THE GUI
+
+on load:
+	set {All.item.enchants.list::*} to "Unbreaking", "Mending", "Curse of Binding", and "Curse of Vanishing"
+	#FISHING ENCHANTS
+	set {Fishing.item.1.enchants.list::*} to "Channeling", "Impaling", "Luck of the Sea", "Lure", and "Loyalty"
+	set {Fishing.item.2.enchants.list::*} to "Riptide"
+	#WEAPON ENCHANTS
+	set {Weapons.item.1.enchants.list::*} to "Bane of Arthropods", "Fire Aspect", "Flame", "Infinity", and "Knockback"
+	set {Weapons.item.2.enchants.list::*} to "Looting", "Multishot", "Power", "Punch", and "Piercing"
+	set {Weapons.item.3.enchants.list::*} to "Quick Charge", "Sharpness", "Smite", and "Sweeping Edge"
+	#TOOL ENCHANTS
+	set {Tools.item.enchants.list::*} to "Efficiency", "Fortune", and "Silk Touch"
+	#ARMOR ENCHANTS
+	set {Armor.item.1.enchants.list::*} to "Aqua Affinity", "Blast Protection", "Depth Strider", "Feather Falling", and "Fire Protection"
+	set {Armor.item.2.enchants.list::*} to "Frost Walker", "Projectile Protection", "Protection", "Respiration", and "Soul Speed"
+	set {Armor.item.3.enchants.list::*} to "Thorns"
+	#MESSAGE
+	if {@loadmsg}:
+		broadcast "{@p}All Enchants loaded!"
+		
+on right click on enchanting table:
+	if player is in world "minihub":
+		cancel event
+		make player say "/enchant"
+	if {@normalenchanting} is false:
+		cancel event
+		make player say "/enchant"
+	else:
+		send "{@p}Use &c/Enchant&7 to customise your item!"
+
+
+command enchant [<text>]:
+	#permission: {@perm} #Delete "#"at the start to use perms
+	#permission message: {@permmsg} #Delete "#"at the start to use perm messgae
+	trigger:
+		if player is not holding air:
+			if arg-1 is not set:
+				send "{@p}Opening the enchant GUI"
+				set metadata tag "ENCHANT" of player to chest inventory with 3 rows named "&6&lEnchant &7GUI"
+				loop 28 times:
+					set slot (loop-value - 1) of metadata tag "ENCHANT" of player to gray stained glass pane named " "
+					
+				set slot 10 of metadata tag "ENCHANT" of player to player's tool
+				
+				if {max.%player%} is set:
+					set slot 11 of metadata tag "ENCHANT" of player to red stained glass pane named "&7E-MAX" with lore " " and "  &8&l| &7&cClick to turn E-Max off" and "  &8&l| &7&cMakes cost &8{@maxenchantcost}&c total"
+				else:
+					set slot 11 of metadata tag "ENCHANT" of player to Green stained glass pane named "&7E-MAX" with lore " " and "  &8&l| &7&cClick to turn E-Max on" and "  &8&l| &7&cMakes cost &8{@maxenchantcost}&c total"
+			
+				set slot 12 of metadata tag "ENCHANT" of player to book named "&7BASIC" with lore " " and "  &8&l| &7Click to open the &cBasic&7 Enchants!" and " "
+				set slot 13 of metadata tag "ENCHANT" of player to book named "&7FISHING" with lore " " and "  &8&l| &7Click to open the &cFishing&7 Enchants!" and " "
+				set slot 14 of metadata tag "ENCHANT" of player to book named "&7WEAPON" with lore " " and "  &8&l| &7Click to open the &cWeapon&7 Enchants!" and " "
+				set slot 15 of metadata tag "ENCHANT" of player to book named "&7TOOLS" with lore " " and "  &8&l| &7Click to open the &cTool&7 Enchants!" and " "
+				set slot 16 of metadata tag "ENCHANT" of player to book named "&7ARMOR" with lore " " and "  &8&l| &7Click to open the &cArmor&7 Enchants!" and " "
+				if player is holding an fishing rod or trident:
+					set slot 13 of metadata tag "ENCHANT" of player to glowing book named "&7FISHING" with lore " " and "  &8&l| &7Click to open the &cFishing&7 Enchants!" and " "
+				if player is holding a sword or bow or axe or crossbow:
+					set slot 14 of metadata tag "ENCHANT" of player to glowing book named "&7WEAPON" with lore " " and "  &8&l| &7Click to open the &cWeapon&7 Enchants!" and " "
+				if player is holding an pickaxe or axe or shovel or hoe:
+					set slot 15 of metadata tag "ENCHANT" of player to glowing book named "&7TOOLS" with lore " " and "  &8&l| &7Click to open the &cTool&7 Enchants!" and " "
+				if player is holding armor:
+					set slot 16 of metadata tag "ENCHANT" of player to glowing book named "&7ARMOR" with lore " " and "  &8&l| &7Click to open the &cArmor&7 Enchants!" and " "
+ 
+				wait 1 ticks
+				open (metadata tag "ENCHANT" of player) to player
+			if arg-1 is "Basic":
+				set metadata tag "ENCHANT" of player to chest inventory with 3 rows named "&6&lEnchant &7GUI"
+				loop 28 times:
+					set slot (loop-value - 1) of metadata tag "ENCHANT" of player to gray stained glass pane named " "
+			
+				set slot 10 of metadata tag "ENCHANT" of player to player's tool with lore " " and " &8&l| &cClick to go back"
+				
+				set {_n} to 12
+				loop {All.item.enchants.list::*}:
+					set slot {_n} of metadata tag "ENCHANT" of player to enchanted book named "&b%loop-value%" with lore " " and "  &8&l| &7Costs &c{@encantcost}&7 to apply!" and " "
+					add 1 to {_n}
+				
+				wait 1 ticks
+				open (metadata tag "ENCHANT" of player) to player
+			if arg-1 is "Fishing":
+				set metadata tag "ENCHANT" of player to chest inventory with 4 rows named "&6&lEnchant &7GUI"
+				loop 37 times:
+					set slot (loop-value - 1) of metadata tag "ENCHANT" of player to gray stained glass pane named " "
+			
+				set slot 10 of metadata tag "ENCHANT" of player to player's tool with lore " " and " &8&l| &cClick to go back"
+				
+				set {_n} to 12
+				loop {Fishing.item.1.enchants.list::*}:
+					set slot {_n} of metadata tag "ENCHANT" of player to enchanted book named "&b%loop-value%" with lore " " and "  &8&l| &7Costs &c{@encantcost}&7 to apply!" and " "
+					add 1 to {_n}
+				set {_n} to 21
+				loop {Fishing.item.2.enchants.list::*}:
+					set slot {_n} of metadata tag "ENCHANT" of player to enchanted book named "&b%loop-value%" with lore " " and "  &8&l| &7Costs &c{@encantcost}&7 to apply!" and " "
+					add 1 to {_n}
+				
+				wait 1 ticks
+				open (metadata tag "ENCHANT" of player) to player
+			if arg-1 is "Weapon":
+				set metadata tag "ENCHANT" of player to chest inventory with 5 rows named "&6&lEnchant &7GUI"
+				loop 46 times:
+					set slot (loop-value - 1) of metadata tag "ENCHANT" of player to gray stained glass pane named " "
+			
+				set slot 10 of metadata tag "ENCHANT" of player to player's tool with lore " " and " &8&l| &cClick to go back"
+				
+				set {_n.1} to 12
+				loop {Weapons.item.1.enchants.list::*}:
+					set slot {_n.1} of metadata tag "ENCHANT" of player to enchanted book named "&b%loop-value%" with lore " " and "  &8&l| &7Costs &c{@encantcost}&7 to apply!" and " "
+					add 1 to {_n.1}
+				set {_n.2} to 21
+				loop {Weapons.item.2.enchants.list::*}:
+					set slot {_n.2} of metadata tag "ENCHANT" of player to enchanted book named "&b%loop-value%" with lore " " and "  &8&l| &7Costs &c{@encantcost}&7 to apply!" and " "
+					add 1 to {_n.2}
+				set {_n.2} to 30
+				loop {Weapons.item.3.enchants.list::*}:
+					set slot {_n.2} of metadata tag "ENCHANT" of player to enchanted book named "&b%loop-value%" with lore " " and "  &8&l| &7Costs &c{@encantcost}&7 to apply!" and " "
+					add 1 to {_n.2}
+				
+				wait 1 ticks
+				open (metadata tag "ENCHANT" of player) to player
+			if arg-1 is "Tools":
+				set metadata tag "ENCHANT" of player to chest inventory with 3 rows named "&6&lEnchant &7GUI"
+				loop 28 times:
+					set slot (loop-value - 1) of metadata tag "ENCHANT" of player to gray stained glass pane named " "
+			
+				set slot 10 of metadata tag "ENCHANT" of player to player's tool with lore " " and " &8&l| &cClick to go back"
+				
+				set {_n} to 12
+				loop {Tools.item.enchants.list::*}:
+					set slot {_n} of metadata tag "ENCHANT" of player to enchanted book named "&b%loop-value%" with lore " " and "  &8&l| &7Costs &c{@encantcost}&7 to apply!" and " "
+					add 1 to {_n}
+				
+				wait 1 ticks
+				open (metadata tag "ENCHANT" of player) to player
+			if arg-1 is "Armor":
+				set metadata tag "ENCHANT" of player to chest inventory with 5 rows named "&6&lEnchant &7GUI"
+				loop 46 times:
+					set slot (loop-value - 1) of metadata tag "ENCHANT" of player to gray stained glass pane named " "
+			
+				set slot 10 of metadata tag "ENCHANT" of player to player's tool with lore " " and " &8&l| &cClick to go back"
+				
+				set {_n.1} to 12
+				loop {Armor.item.1.enchants.list::*}:
+					set slot {_n.1} of metadata tag "ENCHANT" of player to enchanted book named "&b%loop-value%" with lore " " and "  &8&l| &7Costs &c{@encantcost}&7 to apply!" and " "
+					add 1 to {_n.1}
+				set {_n.2} to 21
+				loop {Armor.item.2.enchants.list::*}:
+					set slot {_n.2} of metadata tag "ENCHANT" of player to enchanted book named "&b%loop-value%" with lore " " and "  &8&l| &7Costs &c{@encantcost}&7 to apply!" and " "
+					add 1 to {_n.2}
+				set {_n.2} to 30
+				loop {Armor.item.3.enchants.list::*}:
+					set slot {_n.2} of metadata tag "ENCHANT" of player to enchanted book named "&b%loop-value%" with lore " " and "  &8&l| &7Costs &c{@encantcost}&7 to apply!" and " "
+					add 1 to {_n.2}
+				
+				wait 1 ticks
+				open (metadata tag "ENCHANT" of player) to player
+		else:
+			send "{@p}&cPlease hold an item! &8(Not air)"
+			
+			
+on inventory click:
+	if event-inventory = (metadata tag "ENCHANT" of player):
+		cancel event
+		if index of event-slot is 10:
+			make player say "/enchant"
+		if index of event-slot is 11:
+			if event-item is red stained glass pane or green stained glass pane:
+				if {max.%player%} is set:
+					delete {max.%player%}
+				else:
+					set {max.%player%} to true
+				wait 1 tick
+				make player say "/enchant"
+		if event-item is a book:
+			set {_page} to uncolored event-item's name
+			make player say "/enchant %{_page}%"
+		if event-item is a enchanted book:
+			play sound "entity.experience_orb.pickup" with volume 0.5 to the player
+			if {@closeinv}:
+				close player's inventory
+			set {_enchanment} to uncolored event-item's name
+			set {_ench::*} to enchantments of player's tool
+			if {_ench::*} is not set:
+				add(player, "%{_enchanment}%")
+				stop
+			if "%{_ench::*}%" contains "%{_enchanment}%":
+				upgrade(player, "%{_enchanment}%")
+				stop
+			else:
+				add(player, "%{_enchanment}%")
+				stop
+			
+command add [<string>]:
+	permission: {@perm}
+	permission message: {@permmsg}
+	trigger:
+		if arg-1 is set:
+			add(player, "%arg-1%")
+			
+command upgrade [<string>]:
+	permission: {@perm}
+	permission message: {@permmsg}
+	trigger:
+		if arg-1 is set:
+			upgrade(player, "%arg-1%")
+			
+			
+function add(p: player, ench: string):
+	if {@usecoins}:
+		if {max.%{_p}%} is set:
+			set {_cost} to {@maxenchantcost}
+		else:
+			set {_cost} to {@encantcost}
+					
+		if {@money} is less than {_cost}:
+			send "{@p}&cYou need more money!" to {_p}
+			stop
+		else:
+			remove {_cost} from {@money}
+			send action bar "&c-%{_cost}%&c Coins" to {_p}
+	if {max.%{_p}%} is set:
+		enchant {_p}'s tool with ("%{_ench}% 5" parsed as an enchantment type)
+		send  "{@p}&c%{_ench}%&7 was maxed out" to {_p}
+	else:
+		send "{@p}Added &c%{_ench}%&7 to your item" to {_p}
+		enchant {_p}'s tool with ("%{_ench}% 1" parsed as an enchantment type)
+			
+			
+function upgrade(p: player, ench: string):
+	if {@usecoins}:
+		if {max.%{_p}%} is set:
+			set {_cost} to {@maxenchantcost}
+		else:
+			set {_cost} to {@encantcost}
+					
+		if {@money} is less than {_cost}:
+			send "{@p}&cYou need more money!" to {_p}
+			stop
+		else:
+			remove {_cost} from {@money}
+			send action bar "&c-%{_cost}%&c Coins" to {_p}
+	if "%enchantments of {_p}'s tool%" contains "%{_ench}%":
+		set {_e.name} to {_ench}
+		loop enchantments of {_p}'s tool:
+			if "%loop-value%" contains "%{_ench}%":
+				set {_lvl::*} to split "%loop-value%" by " "
+		loop {_lvl::*}:
+			if "%loop-value%" is "1":
+				set {_n} to (loop-value parsed as an int)
+				set {_e.lvl} to ({_n} + 1)
+			if "%loop-value%" is "2":
+				set {_n} to (loop-value parsed as an int)
+				set {_e.lvl} to ({_n} + 1)
+			if "%loop-value%" is "3":
+				set {_n} to (loop-value parsed as an int)
+				set {_e.lvl} to ({_n} + 1)
+			if "%loop-value%" is "4":
+				set {_n} to (loop-value parsed as an int)
+				set {_e.lvl} to ({_n} + 1)
+			if "%loop-value%" is "5":
+				set {_e.lvl} to "%loop-value%"
+				send "{@p}&c%{_e.name}%&c is at its max level (%{_e.lvl}%)!" to {_p}
+				stop
+	else:
+		send "{@p}That enchant is not on this item!" to {_p}
+		stop
+	#send "%{_e.name}%" to {_p}
+	#send "%{_e.lvl}%" to {_p}
+	if {max.%{_p}%} is set:
+		enchant {_p}'s tool with ("%{_e.name}% 5" parsed as an enchantment type)
+		send  "{@p}&c%{_e.name}%&7 was maxed out" to {_p}
+	else:
+		enchant {_p}'s tool with ("%{_e.name}% %{_e.lvl}%" parsed as an enchantment type)
+		send  "{@p}&c%{_e.name}%&8(+1)" to {_p}
+		
+
+
+
+
+				
