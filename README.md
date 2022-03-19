@@ -8,8 +8,8 @@ Needed
 
 Needed
  - Skript (Link: https://github.com/SkriptLang/Skript/releases)
- - SKBee (Link: https://github.com/ShaneBeee/SkBee/releases/tag/1.12.4)
- - SkQuery (Link: https://github.com/SkQuery/SkQuery/releases/tag/4.1.5)
+ - SKBee (Link: https://github.com/ShaneBeee/SkBee/releases)
+ - SkQuery (Link: https://github.com/SkQuery/SkQuery/releases)
 
 
 
